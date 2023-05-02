@@ -1,4 +1,4 @@
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import BasicButton from "../common/BasicButton";
 import backgroundImage from "../../assets/images/hospitalbeds.jpg";
 
@@ -88,6 +88,8 @@ function RoomMaintenanceForm() {
                   name='payersName'
                   //   onChange={handleInputChange}
                 />
+              </Stack>
+              <Stack spacing={2}>
                 <TextField
                   id='outlined-basic'
                   label='Routine or Not'
@@ -102,8 +104,6 @@ function RoomMaintenanceForm() {
                   name='payersName'
                   //   onChange={handleInputChange}
                 />
-              </Stack>
-              <Stack spacing={2}>
                 <TextField
                   id='outlined-multiline-static'
                   label='Description'
@@ -124,12 +124,7 @@ function RoomMaintenanceForm() {
                   name='payersName'
                   //   onChange={handleInputChange}
                 />
-                <BasicButton
-                  // onClick={onFormSubmit}
-                  text={"Submit"}
-                  width={150}
-                  backgroundColor={"primary"}
-                />
+                <Button variant='contained'>Submit</Button>
               </Stack>
             </Stack>
           </Stack>
