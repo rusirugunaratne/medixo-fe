@@ -10,7 +10,7 @@ import backgroundImage from "../../assets/images/hospitalbeds.jpg";
 import { useEffect, useState } from "react";
 import useForm from "../../hooks/useForm";
 import { ENDPOINTS, createAPIEndpoint } from "../../api";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const styles = {
@@ -29,10 +29,13 @@ const styles = {
   },
 };
 
-function RoomBookingForm() {
+function RoomBookingUpdate({ booking }) {
   const [feature, setFeature] = useState("ICU/MOD");
   const [roomClass, setRoomClass] = useState("A");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  console.log(location.state.booking, "location");
 
   const getFreshModel = () => ({
     regNo: "",
@@ -55,12 +58,15 @@ function RoomBookingForm() {
       .fetch()
       .then((res) => {
         setItems(res.data);
-        console.log(res.data);
       });
   }, []);
 
   const { values, setValues, errors, setErrors, handleInputChange } =
     useForm(getFreshModel);
+
+  useEffect(() => {
+    setValues(location.state.booking);
+  }, []);
 
   const addBooking = () => {
     values["feature"] = feature;
@@ -69,12 +75,15 @@ function RoomBookingForm() {
     values["class"] = roomClass;
     console.log(values);
     items.forEach((item) => {
-      if (item.roomNo === values["roomNo"]) {
+      if (
+        item.roomNo === values["roomNo"] &&
+        item.roomNo !== location.state.booking.roomNo
+      ) {
         toast.error("Room Not Available");
       } else {
-        createAPIEndpoint(ENDPOINTS.roomBook).post(values);
+        createAPIEndpoint(ENDPOINTS.roomBook).put(values._id, values);
         toast.success("Booking successful");
-        navigate("/spaceMaintenance");
+        navigate("/roomBookingGrid");
       }
     });
   };
@@ -226,4 +235,4 @@ function RoomBookingForm() {
   );
 }
 
-export default RoomBookingForm;
+export default RoomBookingUpdate;

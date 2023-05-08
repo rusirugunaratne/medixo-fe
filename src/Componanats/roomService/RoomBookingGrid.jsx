@@ -1,8 +1,19 @@
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import BasicButton from "../common/BasicButton";
 import backgroundImage from "../../assets/images/hospitalbeds.jpg";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MaterialReactTable from "material-react-table";
+import { ENDPOINTS, createAPIEndpoint } from "../../api";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditNoteIcon from "@mui/icons-material/EditNote";
+import { useNavigate } from "react-router-dom";
 
 const styles = {
   header: {
@@ -21,59 +32,79 @@ const styles = {
 };
 
 function RoomBookingGrid() {
-  const data = [
-    {
-      itemNo: "RO1",
-      itemName: "Beds",
-      expDue: "Every Month",
-      quantity: 1,
-      noOfItems: 150,
-      alerts: "Maintenance Due Today",
-    },
-    {
-      itemNo: "RO1",
-      itemName: "Beds",
-      expDue: "Every Month",
-      quantity: 1,
-      noOfItems: 150,
-      alerts: "Maintenance Due Today",
-    },
-  ];
+  const [items, setItems] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    createAPIEndpoint(ENDPOINTS.roomBook)
+      .fetch()
+      .then((res) => {
+        setItems(res.data);
+        console.log(res.data);
+      });
+  }, []);
+
+  const deleteItem = (id) => {
+    createAPIEndpoint(ENDPOINTS.roomBook).delete(id);
+    window.location.reload();
+  };
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "itemNo",
-        header: "Item No",
+        accessorKey: "regNo",
+        header: "RegNo",
         maxSize: 20,
       },
       {
-        accessorKey: "itemName",
-        header: "Item ATM",
+        accessorKey: "name",
+        header: "Name",
         maxSize: 10,
       },
       {
-        accessorKey: "expDue",
-        header: "Expiry / Maintenance Due Date",
+        accessorKey: "age",
+        header: "Age",
         maxSize: 10,
       },
       {
-        accessorKey: "quantity",
-        header: "Quantity",
+        accessorKey: "gender",
+        header: "Gender",
         maxSize: 10,
       },
       {
-        accessorKey: "noOfItems",
-        header: "No of items",
+        accessorKey: "contactNo",
+        header: "Contact No",
         maxSize: 10,
       },
       {
-        header: "Alerts",
-        maxSize: 30,
-        Cell: ({ cell, row }) => {
-          console.log(row);
-          return <Typography color='red'>{row.original.alerts}</Typography>;
-        },
+        accessorKey: "email",
+        header: "Email",
+        maxSize: 10,
+      },
+      {
+        accessorKey: "doctorName",
+        header: "Doctor Name",
+        maxSize: 10,
+      },
+      {
+        accessorKey: "admitType",
+        header: "Admit Type",
+        maxSize: 10,
+      },
+      {
+        accessorKey: "roomNo",
+        header: "Room Number",
+        maxSize: 10,
+      },
+      {
+        accessorKey: "feature",
+        header: "Feature",
+        maxSize: 10,
+      },
+      {
+        accessorKey: "class",
+        header: "Class",
+        maxSize: 10,
       },
     ],
     []
@@ -95,7 +126,29 @@ function RoomBookingGrid() {
               Inventory - Rooms
             </Typography>
             <Stack direction='row' spacing={2}>
-              <MaterialReactTable columns={columns} data={data} />
+              <MaterialReactTable
+                enableRowActions
+                renderRowActionMenuItems={({ row }) => [
+                  <MenuItem
+                    key='edit'
+                    onClick={() =>
+                      navigate("/roomBookingEdit", {
+                        state: { booking: row.original },
+                      })
+                    }
+                  >
+                    Edit
+                  </MenuItem>,
+                  <MenuItem
+                    key='delete'
+                    onClick={() => deleteItem(row.original._id)}
+                  >
+                    Delete
+                  </MenuItem>,
+                ]}
+                columns={columns}
+                data={items}
+              />
             </Stack>
           </Stack>
         </Box>
