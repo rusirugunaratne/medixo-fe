@@ -1,5 +1,4 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
-import BasicButton from "../common/BasicButton";
 import backgroundImage from "../../assets/images/hospitalbeds.jpg";
 
 const styles = {
@@ -58,6 +57,7 @@ function RoomMaintenanceForm() {
                   label='Date'
                   variant='outlined'
                   name='payersName'
+                  type='date'
                   //   onChange={handleInputChange}
                 />
                 <TextField
@@ -108,7 +108,7 @@ function RoomMaintenanceForm() {
                   id='outlined-multiline-static'
                   label='Description'
                   multiline
-                  rows={4}
+                  rows={2}
                 />
                 <TextField
                   id='outlined-basic'
