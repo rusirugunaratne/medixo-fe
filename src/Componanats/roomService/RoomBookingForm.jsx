@@ -68,15 +68,20 @@ function RoomBookingForm() {
     values["roomNo"] = parseInt(values["roomNo"]);
     values["class"] = roomClass;
     console.log(values);
+    let roomBooked = false;
     items.forEach((item) => {
       if (item.roomNo === values["roomNo"]) {
+        roomBooked = true;
         toast.error("Room Not Available");
       } else {
-        createAPIEndpoint(ENDPOINTS.roomBook).post(values);
-        toast.success("Booking successful");
-        navigate("/spaceMaintenance");
+        roomBooked = false;
       }
     });
+    if (!roomBooked) {
+      createAPIEndpoint(ENDPOINTS.roomBook).post(values);
+      toast.success("Booking successful");
+      navigate("/spaceMaintenance");
+    }
   };
 
   return (
