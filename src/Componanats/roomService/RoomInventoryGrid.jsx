@@ -1,8 +1,10 @@
-import { Box, Stack, TextField, Typography } from "@mui/material";
+import { Box, MenuItem, Stack, TextField, Typography } from "@mui/material";
 import BasicButton from "../common/BasicButton";
 import backgroundImage from "../../assets/images/hospitalbeds.jpg";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import MaterialReactTable from "material-react-table";
+import { useNavigate } from "react-router-dom";
+import { ENDPOINTS, createAPIEndpoint } from "../../api";
 
 const styles = {
   header: {
@@ -21,24 +23,22 @@ const styles = {
 };
 
 function RoomInventoryGrid() {
-  const data = [
-    {
-      itemNo: "RO1",
-      itemName: "Beds",
-      expDue: "Every Month",
-      quantity: 1,
-      noOfItems: 150,
-      alerts: "Maintenance Due Today",
-    },
-    {
-      itemNo: "RO1",
-      itemName: "Beds",
-      expDue: "Every Month",
-      quantity: 1,
-      noOfItems: 150,
-      alerts: "Maintenance Due Today",
-    },
-  ];
+  const [items, setItems] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    createAPIEndpoint(ENDPOINTS.inventory)
+      .fetch()
+      .then((res) => {
+        setItems(res.data);
+        console.log(res.data);
+      });
+  }, []);
+
+  const deleteItem = (id) => {
+    createAPIEndpoint(ENDPOINTS.inventory).delete(id);
+    window.location.reload();
+  };
 
   const columns = useMemo(
     () => [
@@ -53,7 +53,7 @@ function RoomInventoryGrid() {
         maxSize: 10,
       },
       {
-        accessorKey: "expDue",
+        accessorKey: "dueDate",
         header: "Expiry / Maintenance Due Date",
         maxSize: 10,
       },
@@ -95,7 +95,29 @@ function RoomInventoryGrid() {
               Inventory - Rooms
             </Typography>
             <Stack direction='row' spacing={2}>
-              <MaterialReactTable columns={columns} data={data} />
+              <MaterialReactTable
+                enableRowActions
+                renderRowActionMenuItems={({ row }) => [
+                  <MenuItem
+                    key='edit'
+                    onClick={() =>
+                      navigate("/inventoryEdit", {
+                        state: { inventory: row.original },
+                      })
+                    }
+                  >
+                    Edit
+                  </MenuItem>,
+                  <MenuItem
+                    key='delete'
+                    onClick={() => deleteItem(row.original._id)}
+                  >
+                    Delete
+                  </MenuItem>,
+                ]}
+                columns={columns}
+                data={items}
+              />
             </Stack>
           </Stack>
         </Box>

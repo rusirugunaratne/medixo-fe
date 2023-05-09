@@ -5,6 +5,7 @@ import rooms from "../../assets/images/rooms.jpg";
 import inventory from "../../assets/images/inventory.jpg";
 import maintenance from "../../assets/images/maintenance.jpg";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@material-ui/core";
 
 const styles = {
   header: {
@@ -37,22 +38,40 @@ function SpaceMaintenanceHome() {
           style={styles.content}
         >
           <Stack direction={"row"} spacing={2}>
-            <HomeCard
-              title={"Room Booking"}
-              img={rooms}
-              onAdd={() => navigate("/roomBooking")}
-              onView={() => navigate("/roomBookingGrid")}
-            />
+            <Stack spacing={2} direction={"column"}>
+              <HomeCard
+                title={"Room Booking"}
+                img={rooms}
+                onAdd={() => navigate("/roomBooking")}
+                onView={() => navigate("/roomBookingGrid")}
+              />
+              <Button
+                onClick={() => navigate("/roomBookingStatus")}
+                variant='contained'
+              >
+                Room Booking Status
+              </Button>
+            </Stack>
             <HomeCard
               title={"Inventory"}
               img={inventory}
               onAdd={() => navigate("/inventory")}
+              onView={() => navigate("/inventoryGrid")}
             />
-            <HomeCard
-              title={"Maintenance"}
-              img={maintenance}
-              onAdd={() => navigate("/maintenance")}
-            />
+            <Stack spacing={2} direction={"column"}>
+              <HomeCard
+                title={"Maintenance"}
+                img={maintenance}
+                onAdd={() => navigate("/maintenance")}
+                onView={() => navigate("/maintenanceGrid")}
+              />
+              <Button
+                onClick={() => navigate("/roomMaintenanceStatus")}
+                variant='contained'
+              >
+                Room Maintenance Status
+              </Button>
+            </Stack>
           </Stack>
         </Box>
       </div>

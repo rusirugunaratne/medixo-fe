@@ -1,9 +1,10 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import backgroundImage from "../../assets/images/hospitalbeds.jpg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useForm from "../../hooks/useForm";
 import { ENDPOINTS, createAPIEndpoint } from "../../api";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const styles = {
   header: {
@@ -21,8 +22,9 @@ const styles = {
   },
 };
 
-function RoomMaintenanceForm() {
+function RoomMaintenanceUpdate() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getFreshModel = () => ({
     roomNo: null,
@@ -41,11 +43,15 @@ function RoomMaintenanceForm() {
   const { values, setValues, errors, setErrors, handleInputChange } =
     useForm(getFreshModel);
 
+  useEffect(() => {
+    setValues(location.state.maintenance);
+  }, []);
+
   const addMaintenance = () => {
     values["roomNo"] = parseInt(values["roomNo"]);
-    createAPIEndpoint(ENDPOINTS.maintenance).post(values);
+    createAPIEndpoint(ENDPOINTS.maintenance).put(values._id, values);
     toast.success("Maintenance add successful");
-    navigate("/spaceMaintenance");
+    navigate("/maintenanceGrid");
   };
 
   return (
@@ -178,4 +184,4 @@ function RoomMaintenanceForm() {
   );
 }
 
-export default RoomMaintenanceForm;
+export default RoomMaintenanceUpdate;

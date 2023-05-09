@@ -31,12 +31,12 @@ const styles = {
   },
 };
 
-function RoomBookingGrid() {
+function RoomMaintenanceGrid() {
   const [items, setItems] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    createAPIEndpoint(ENDPOINTS.roomBook)
+    createAPIEndpoint(ENDPOINTS.maintenance)
       .fetch()
       .then((res) => {
         setItems(res.data);
@@ -45,65 +45,55 @@ function RoomBookingGrid() {
   }, []);
 
   const deleteItem = (id) => {
-    createAPIEndpoint(ENDPOINTS.roomBook).delete(id);
+    createAPIEndpoint(ENDPOINTS.maintenance).delete(id);
     window.location.reload();
   };
 
   const columns = useMemo(
     () => [
       {
-        accessorKey: "regNo",
-        header: "RegNo",
+        accessorKey: "roomNo",
+        header: "Room No",
         maxSize: 20,
       },
       {
-        accessorKey: "name",
-        header: "Name",
+        accessorKey: "date",
+        header: "Date",
         maxSize: 10,
       },
       {
-        accessorKey: "age",
-        header: "Age",
+        accessorKey: "requestingOfficer",
+        header: "Requesting Officer",
         maxSize: 10,
       },
       {
-        accessorKey: "gender",
-        header: "Gender",
+        accessorKey: "reason",
+        header: "Reason",
         maxSize: 10,
       },
       {
-        accessorKey: "contactNo",
-        header: "Contact No",
+        accessorKey: "type",
+        header: "Type",
         maxSize: 10,
       },
       {
-        accessorKey: "email",
-        header: "Email",
+        accessorKey: "requiredMaterials",
+        header: "Required Materials",
         maxSize: 10,
       },
       {
-        accessorKey: "doctorName",
-        header: "Doctor Name",
+        accessorKey: "routineOrNot",
+        header: "Routine?",
         maxSize: 10,
       },
       {
-        accessorKey: "admitType",
-        header: "Admit Type",
+        accessorKey: "estimatedCompletionTime",
+        header: "Completion Time (estimated)",
         maxSize: 10,
       },
       {
-        accessorKey: "roomNo",
-        header: "Room Number",
-        maxSize: 10,
-      },
-      {
-        accessorKey: "feature",
-        header: "Feature",
-        maxSize: 10,
-      },
-      {
-        accessorKey: "class",
-        header: "Class",
+        accessorKey: "description",
+        header: "Description",
         maxSize: 10,
       },
     ],
@@ -123,7 +113,7 @@ function RoomBookingGrid() {
         >
           <Stack spacing={2}>
             <Typography color='#2F4FAA' variant='h4'>
-              Bookings
+              Room Maintenance
             </Typography>
             <Stack direction='row' spacing={2}>
               <MaterialReactTable
@@ -132,8 +122,8 @@ function RoomBookingGrid() {
                   <MenuItem
                     key='edit'
                     onClick={() =>
-                      navigate("/roomBookingEdit", {
-                        state: { booking: row.original },
+                      navigate("/maintenanceUpdate", {
+                        state: { maintenance: row.original },
                       })
                     }
                   >
@@ -157,4 +147,4 @@ function RoomBookingGrid() {
   );
 }
 
-export default RoomBookingGrid;
+export default RoomMaintenanceGrid;

@@ -1,10 +1,11 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 import BasicButton from "../common/BasicButton";
 import backgroundImage from "../../assets/images/hospitalbeds.jpg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useForm from "../../hooks/useForm";
 import { ENDPOINTS, createAPIEndpoint } from "../../api";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const styles = {
   header: {
@@ -22,8 +23,9 @@ const styles = {
   },
 };
 
-function RoomInventory() {
+function RoomInventoryUpdate() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const getFreshModel = () => ({
     itemNo: "",
@@ -36,13 +38,17 @@ function RoomInventory() {
   const { values, setValues, errors, setErrors, handleInputChange } =
     useForm(getFreshModel);
 
-  const addInventory = () => {
+  const updateInventory = () => {
     values["quantity"] = parseInt(values["quantity"]);
     values["noOfItems"] = parseInt(values["noOfItems"]);
-    createAPIEndpoint(ENDPOINTS.inventory).post(values);
-    toast.success("Inventory add successful");
-    navigate("/spaceMaintenance");
+    createAPIEndpoint(ENDPOINTS.inventory).put(values._id, values);
+    toast.success("Booking successful");
+    navigate("/inventoryGrid");
   };
+
+  useEffect(() => {
+    setValues(location.state.inventory);
+  }, []);
 
   return (
     <>
@@ -112,7 +118,7 @@ function RoomInventory() {
                   value={values.quantity}
                   onChange={handleInputChange}
                 />
-                <Button variant='contained' onClick={() => addInventory()}>
+                <Button variant='contained' onClick={() => updateInventory()}>
                   Submit
                 </Button>
               </Stack>
@@ -124,4 +130,4 @@ function RoomInventory() {
   );
 }
 
-export default RoomInventory;
+export default RoomInventoryUpdate;

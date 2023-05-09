@@ -4,6 +4,8 @@ export const BASE_URL = "http://localhost:3001/";
 
 export const ENDPOINTS = {
   roomBook: "roomBook",
+  inventory: "inventory",
+  maintenance: "maintenance",
 };
 
 export const createAPIEndpoint = (endpoint) => {
